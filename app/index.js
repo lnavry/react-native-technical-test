@@ -3,7 +3,7 @@ import EStyleSheet from 'react-native-extended-stylesheet'
 import { Provider } from 'react-redux'
 
 import Navigator from './config/routes'
-import store from './config/store'
+import store from './state/store'
 
 EStyleSheet.build({
   $primaryBlue: '#4F6D7A',
