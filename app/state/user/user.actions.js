@@ -5,7 +5,7 @@ import { Me } from '../../network'
  */
 
 const GET_ME_STARTED = 'GET_ME_STARTED'
-const GET_ME_SUCCESS = 'GET_ME_FINISHED'
+const GET_ME_SUCCESS = 'GET_ME_SUCCESS'
 const GET_ME_FAILED = 'GET_ME_FAILED'
 
 export const types = {

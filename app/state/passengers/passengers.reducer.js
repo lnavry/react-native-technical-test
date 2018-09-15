@@ -6,8 +6,10 @@ export const STORE_NAME = 'passengers'
  * Reducer
  */
 
-const initialState = {}
-export default function shoppingListsReducer(state = initialState, action) {
+const INITIAL_STATE = {
+  list: [],
+}
+export default function passengersReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case types.CREATE_PASSENGER:
       return state

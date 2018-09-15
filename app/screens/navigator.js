@@ -3,15 +3,6 @@ import PassengerList from './PassengerList'
 
 export default createStackNavigator(
   {
-    Home: {
-      screen: PassengerList,
-      navigationOptions: {
-        header: () => null,
-        headerTitle: 'Home',
-      },
-    },
-  },
-  {
-    headerMode: 'screen',
-  },
+    Home: PassengerList,
+  }
 )

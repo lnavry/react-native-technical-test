@@ -11,7 +11,7 @@ const INITIAL_STATE = {
   loading: false,
   error: null,
 }
-export default function shoppingListsReducer(state = INITIAL_STATE, action) {
+export default function userReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case types.GET_ME_STARTED:
       return {
