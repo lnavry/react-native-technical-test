@@ -1,18 +1,14 @@
 import React, { Component } from 'react'
-import {
-  StyleSheet,
-  Text,
-  StatusBar,
-  View,
-} from 'react-native'
+import { StyleSheet, Text, StatusBar, View, FlatList } from 'react-native'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
+import capitalize from 'lodash/capitalize'
 import usersState from '../../state/user'
 import passengersState from '../../state/passengers'
 import PassengerRow from './components/passenger-row'
 import EnterInfoButton from './components/enter-info-button'
-import { MAIN_PASSENGER_ID } from '../../state/passengers/passengers.reducer';
+import { MAIN_PASSENGER_ID } from '../../state/passengers/passengers.reducer'
 
 const USER_SHAPE = PropTypes.shape({
   id: PropTypes.string.isRequired,
@@ -40,6 +36,34 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
 })
+
+const mapPassengersObjectToArray = passengers => {
+  let currentAdult = 2
+  let currentChild = 1
+  return Object.values(passengers)
+    .filter(passenger => passenger.id !== MAIN_PASSENGER_ID)
+    .map(passenger => {
+      const isComplete =
+        passenger.firstName &&
+        passenger.lastName &&
+        passenger.title &&
+        passenger.nationality &&
+        passenger.dateOfBirth &&
+        passenger.passportId
+      const emptyPassengerName = isComplete ? '' : `${capitalize(passenger.type)} ${
+        passenger.type === 'adult' ? currentAdult : currentChild
+      }`
+      currentAdult =
+        passenger.type === 'adult' ? currentAdult + 1 : currentAdult
+      currentChild =
+        passenger.type === 'child' ? currentChild + 1 : currentChild
+
+      return ({
+        ...passenger,
+        emptyPassengerName,
+      })
+    })
+}
 
 class PassengerList extends Component {
   static propTypes = {
@@ -73,6 +97,23 @@ class PassengerList extends Component {
     initializePassengers({ me, types: passengerTypes })
   }
 
+  renderRow = ({ item }) =>
+    item.emptyPassengerName ? (
+      <EnterInfoButton name={item.emptyPassengerName} onPress={() => {}} />
+    ) : (
+      <PassengerRow passenger={item} onEditPress={() => {}} />
+    )
+
+  renderListHeader = mainPassenger => () => (
+    <React.Fragment>
+      <Text style={styles.titleText}>
+        Main traveller (this must be you, the account holder)
+      </Text>
+      <PassengerRow passenger={mainPassenger} onEditPress={() => {}} />
+      <Text style={styles.titleText}>Additional Travellers</Text>
+    </React.Fragment>
+  )
+
   render() {
     const { passengers } = this.props
 
@@ -81,12 +122,14 @@ class PassengerList extends Component {
     return (
       <View style={styles.container}>
         <StatusBar translucent={false} barStyle="light-content" />
-        <Text style={styles.titleText}>
-          Main traveller (this must be you, the account holder)
-        </Text>
-        <PassengerRow passenger={passengers[MAIN_PASSENGER_ID]} onEditPress={() => {}} />
-        <Text style={styles.titleText}>Additional Travellers</Text>
-        <EnterInfoButton name="Adult 2" onPress={() => {}} />
+        <FlatList
+          ListHeaderComponent={this.renderListHeader(
+            passengers[MAIN_PASSENGER_ID]
+          )}
+          data={mapPassengersObjectToArray(passengers)}
+          renderItem={this.renderRow}
+          keyExtractor={item => item.id}
+        />
       </View>
     )
   }

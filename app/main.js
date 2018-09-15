@@ -61,7 +61,7 @@ class Main extends Component {
         </View>
       )
 
-    return me ? <Navigator onNavigationStateChange={null} /> : null
+    return me ? <Navigator onNavigationStateChange={null} /> : null // this would be login screen irl
   }
 }
 

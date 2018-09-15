@@ -10,6 +10,7 @@ const AVATAR_CONTAINER_STYLE = {
   borderWidth: 2,
   justifyContent: 'center',
   alignItems: 'center',
+  backgroundColor: '#fff',
 }
 
 const AVATAR_IMAGE_STYLE = {
