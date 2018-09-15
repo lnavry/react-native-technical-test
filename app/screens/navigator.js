@@ -1,5 +1,5 @@
 import { createStackNavigator } from 'react-navigation'
-import PassengerList from './PassengerList'
+import PassengerList from './passenger-list'
 
 export default createStackNavigator(
   {

@@ -2,11 +2,11 @@
  * Action types
  */
 
-const CREATE_PASSENGER = 'CREATE_PASSENGER'
+const INITIALIZE_PASSENGERS = 'INITIALIZE_PASSENGERS'
 const EDIT_PASSENGER = 'EDIT_PASSENGER'
 
 export const types = {
-  CREATE_PASSENGER,
+  INITIALIZE_PASSENGERS,
   EDIT_PASSENGER,
 }
 
@@ -14,17 +14,17 @@ export const types = {
  * Actions
  */
 
-const createPassenger = ({ id, title, firstName, lastName, dateOfBirth, passportId, nationality }) => ({
-  type: CREATE_PASSENGER,
-  payload: { id, title, firstName, lastName, dateOfBirth, passportId, nationality },
+const initializePassengers = ({ me, types: passengerTypes }) => ({
+  type: INITIALIZE_PASSENGERS,
+  payload: { me, types: passengerTypes },
 })
 
-const editPassenger = ({ id, title, firstName, lastName, dateOfBirth, passportId, nationality }) => ({
+const editPassenger = ({ id, title, firstName, lastName, dateOfBirth, passportId, nationality, avatar }) => ({
   type: EDIT_PASSENGER,
-  payload: { id, title, firstName, lastName, dateOfBirth, passportId, nationality },
+  payload: { id, title, firstName, lastName, dateOfBirth, passportId, nationality, avatar },
 })
 
 export default {
-  createPassenger,
+  initializePassengers,
   editPassenger,
 }
