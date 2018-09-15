@@ -19,9 +19,9 @@ const initializePassengers = ({ me, types: passengerTypes }) => ({
   payload: { me, types: passengerTypes },
 })
 
-const editPassenger = ({ id, title, firstName, lastName, dateOfBirth, passportId, nationality, avatar }) => ({
+const editPassenger = ({ id, type, title, firstName, lastName, dateOfBirth, passportId, nationality, avatar }) => ({
   type: EDIT_PASSENGER,
-  payload: { id, title, firstName, lastName, dateOfBirth, passportId, nationality, avatar },
+  payload: { id, type, title, firstName, lastName, dateOfBirth, passportId, nationality, avatar },
 })
 
 export default {

@@ -8,8 +8,8 @@ export const MAIN_PASSENGER_ID = 'main'
  * Handlers
  */
 
-const initializePassengersHandler = action => {
-  const { payload: { types: { adults, children }, me } } = action 
+const initializePassengersHandler = payload => {
+  const { types: { adults, children }, me } = payload
   const newState = {}
 
   newState[MAIN_PASSENGER_ID] = {
@@ -39,9 +39,9 @@ const INITIAL_STATE = {}
 export default function passengersReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case types.INITIALIZE_PASSENGERS:
-      return initializePassengersHandler(action)
+      return initializePassengersHandler(action.payload)
     case types.EDIT_PASSENGER:
-      return state
+      return { ...state, [action.payload.id]: action.payload}
     default:
       return state
   }

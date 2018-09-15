@@ -47,9 +47,7 @@ const mapPassengersObjectToArray = passengers => {
         passenger.firstName &&
         passenger.lastName &&
         passenger.title &&
-        passenger.nationality &&
-        passenger.dateOfBirth &&
-        passenger.passportId
+        passenger.dateOfBirth
       const emptyPassengerName = isComplete
         ? ''
         : `${capitalize(passenger.type)} ${
