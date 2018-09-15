@@ -50,18 +50,20 @@ const mapPassengersObjectToArray = passengers => {
         passenger.nationality &&
         passenger.dateOfBirth &&
         passenger.passportId
-      const emptyPassengerName = isComplete ? '' : `${capitalize(passenger.type)} ${
-        passenger.type === 'adult' ? currentAdult : currentChild
-      }`
+      const emptyPassengerName = isComplete
+        ? ''
+        : `${capitalize(passenger.type)} ${
+            passenger.type === 'adult' ? currentAdult : currentChild
+          }`
       currentAdult =
         passenger.type === 'adult' ? currentAdult + 1 : currentAdult
       currentChild =
         passenger.type === 'child' ? currentChild + 1 : currentChild
 
-      return ({
+      return {
         ...passenger,
         emptyPassengerName,
-      })
+      }
     })
 }
 
@@ -74,6 +76,9 @@ class PassengerList extends Component {
       adults: PropTypes.number,
       children: PropTypes.number,
     }),
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func.isRequired,
+    }).isRequired,
   }
 
   static defaultProps = {
@@ -97,11 +102,22 @@ class PassengerList extends Component {
     initializePassengers({ me, types: passengerTypes })
   }
 
+  handlePassengerEditPress = passengerId => () => {
+    const { navigation } = this.props
+    navigation.navigate('Form', { passengerId })
+  }
+
   renderRow = ({ item }) =>
     item.emptyPassengerName ? (
-      <EnterInfoButton name={item.emptyPassengerName} onPress={() => {}} />
+      <EnterInfoButton
+        name={item.emptyPassengerName}
+        onPress={this.handlePassengerEditPress(item.id)}
+      />
     ) : (
-      <PassengerRow passenger={item} onEditPress={() => {}} />
+      <PassengerRow
+        passenger={item}
+        onEditPress={this.handlePassengerEditPress(item.id)}
+      />
     )
 
   renderListHeader = mainPassenger => () => (
@@ -109,7 +125,10 @@ class PassengerList extends Component {
       <Text style={styles.titleText}>
         Main traveller (this must be you, the account holder)
       </Text>
-      <PassengerRow passenger={mainPassenger} onEditPress={() => {}} />
+      <PassengerRow
+        passenger={mainPassenger}
+        onEditPress={this.handlePassengerEditPress(MAIN_PASSENGER_ID)}
+      />
       <Text style={styles.titleText}>Additional Travellers</Text>
     </React.Fragment>
   )
