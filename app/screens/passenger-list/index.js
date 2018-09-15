@@ -10,7 +10,9 @@ import { connect } from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
 import usersState from '../../state/user'
 import passengersState from '../../state/passengers'
-import Avatar from '../../components/avatar'
+import PassengerRow from './components/passenger-row'
+import EnterInfoButton from './components/enter-info-button'
+import { MAIN_PASSENGER_ID } from '../../state/passengers/passengers.reducer';
 
 const USER_SHAPE = PropTypes.shape({
   id: PropTypes.string.isRequired,
@@ -31,7 +33,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 16,
+    paddingLeft: 16,
+    paddingRight: 24,
   },
   titleText: {
     marginVertical: 16,
@@ -81,8 +84,9 @@ class PassengerList extends Component {
         <Text style={styles.titleText}>
           Main traveller (this must be you, the account holder)
         </Text>
-        <Avatar avatar={passengers[passengersState.MAIN_PASSENGER_ID].avatar} />
+        <PassengerRow passenger={passengers[MAIN_PASSENGER_ID]} onEditPress={() => {}} />
         <Text style={styles.titleText}>Additional Travellers</Text>
+        <EnterInfoButton name="Adult 2" onPress={() => {}} />
       </View>
     )
   }
@@ -95,6 +99,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   initializePassengers: passengersState.actions.initializePassengers,
+  onEditPassenger: passengersState.actions.editPassenger,
 }
 
 export default connect(

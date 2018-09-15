@@ -4,11 +4,13 @@ import { types } from './passengers.actions'
 export const STORE_NAME = 'passengers'
 export const MAIN_PASSENGER_ID = 'main'
 
+/**
+ * Handlers
+ */
+
 const initializePassengersHandler = action => {
   const { payload: { types: { adults, children }, me } } = action 
   const newState = {}
-
-  console.log('reducers funnny', action)
 
   newState[MAIN_PASSENGER_ID] = {
     ...me,
