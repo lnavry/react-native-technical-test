@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
     paddingTop: 32,
     paddingHorizontal: 8,
     width: deviceWidth,
-    marginTop: -4,
     marginLeft: -16,
   },
   friendContainer: {

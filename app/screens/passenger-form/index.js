@@ -4,17 +4,21 @@ import {
   TouchableOpacity,
   StatusBar,
   Text,
-  Picker,
   TouchableWithoutFeedback,
+  DatePickerIOS,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { FormInput, FormValidationMessage } from 'react-native-elements'
 import PropTypes from 'prop-types'
+import moment from 'moment'
 import FriendsCarousel from './components/friends-carousel'
+import TitlePicker from './components/title-picker'
 import passengersState from '../../state/passengers'
 import friends from './friends.mock'
 import styles from './styles'
+
+const DATE_FORMAT = 'YYYY-MM-DD'
 
 const TITLE_ERROR_MESSAGE = 'Title is required'
 const FIRST_NAME_ERROR_MESSAGE =
@@ -54,6 +58,7 @@ class PassengerForm extends Component {
     headerTintColor: '#fff',
     headerStyle: {
       backgroundColor: 'rgb(255, 72, 73)',
+      borderBottomWidth: 0,
     },
     headerBackTitle: null,
     headerRight: (
@@ -64,7 +69,7 @@ class PassengerForm extends Component {
   })
 
   state = {
-    showTitlePicker: false,
+    showDatePicker: false,
     title: this.props.passenger.title || '',
     titleError: '',
     firstName: this.props.passenger.firstName || '',
@@ -109,7 +114,7 @@ class PassengerForm extends Component {
 
   render() {
     const {
-      showTitlePicker,
+      showDatePicker,
       title,
       titleError,
       firstName,
@@ -135,37 +140,13 @@ class PassengerForm extends Component {
           }
         />
         <Text style={styles.titleText}>Add New Traveller</Text>
-        <TouchableWithoutFeedback
-          onPress={() => this.setState({ showTitlePicker: true })}
-        >
-          <View style={styles.inputContainer}>
-            {title ? (
-              <Text style={styles.inputText}>{title}</Text>
-            ) : (
-              <Text style={styles.placeholder}>Title</Text>
-            )}
-          </View>
-        </TouchableWithoutFeedback>
-        {titleError && (
-          <FormValidationMessage>{titleError}</FormValidationMessage>
-        )}
-        {showTitlePicker && (
-          <Picker
-            selectedValue={title}
-            style={styles.picker}
-            onValueChange={value =>
-              this.setState({
-                title: value,
-                showTitlePicker: false,
-                titleError: '',
-              })
-            }
-          >
-            <Picker.Item label="Select title" />
-            <Picker.Item label="Mr" value="Mr" />
-            <Picker.Item label="Mrs" value="Mrs" />
-          </Picker>
-        )}
+        <TitlePicker
+          title={title}
+          titleError={titleError}
+          onTitleChange={value =>
+            this.setState({ title: value, titleError: '' })
+          }
+        />
         <FormInput
           placeholder="First name"
           value={firstName}
@@ -192,14 +173,30 @@ class PassengerForm extends Component {
         {lastNameError && (
           <FormValidationMessage>{lastNameError}</FormValidationMessage>
         )}
-        <FormInput
-          placeholder="Date of birth"
-          value={dateOfBirth}
-          onChangeText={value => this.setState({ dateOfBirth: value })}
-          containerStyle={styles.inputContainer}
-          placeholderTextColor="rgb(120, 120, 120)"
-          inputStyle={styles.inputText}
-        />
+        <TouchableWithoutFeedback
+          onPress={() => this.setState({ showDatePicker: true })}
+        >
+          <View style={styles.inputContainer}>
+            {title ? (
+              <Text style={styles.inputText}>{dateOfBirth}</Text>
+            ) : (
+              <Text style={styles.placeholder}>Date of Birth</Text>
+            )}
+          </View>
+        </TouchableWithoutFeedback>
+        {showDatePicker && (
+          <DatePickerIOS
+            mode="date"
+            date={dateOfBirth ? moment(dateOfBirth).toDate() : new Date()}
+            onDateChange={date =>
+              this.setState({
+                dateOfBirth: moment(date).format(DATE_FORMAT),
+                dateOfBirthError: '',
+                showDatePicker: false,
+              })
+            }
+          />
+        )}
         {dateOfBirthError && (
           <FormValidationMessage>{dateOfBirthError}</FormValidationMessage>
         )}
