@@ -11,12 +11,16 @@ import { connect } from 'react-redux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { FormInput, FormValidationMessage } from 'react-native-elements'
 import PropTypes from 'prop-types'
+import FriendsCarousel from './components/friends-carousel'
 import passengersState from '../../state/passengers'
+import friends from './friends.mock'
 import styles from './styles'
 
 const TITLE_ERROR_MESSAGE = 'Title is required'
-const FIRST_NAME_ERROR_MESSAGE = 'First name is required and it should consist of at least 3 characters.'
-const LAST_NAME_ERROR_MESSAGE = 'Last is required and it should consist of at least 3 characters.'
+const FIRST_NAME_ERROR_MESSAGE =
+  'First name is required and it should consist of at least 3 characters.'
+const LAST_NAME_ERROR_MESSAGE =
+  'Last is required and it should consist of at least 3 characters.'
 const DATE_OF_BIRTH_ERROR_MESSAGE = 'Date of birth is required.'
 
 const USER_SHAPE = PropTypes.shape({
@@ -98,7 +102,9 @@ class PassengerForm extends Component {
       dateOfBirthError: isDateOfBirthValid ? '' : DATE_OF_BIRTH_ERROR_MESSAGE,
     })
 
-    return isTitleValid && isFirstNameValid && isLastNameValid && isDateOfBirthValid
+    return (
+      isTitleValid && isFirstNameValid && isLastNameValid && isDateOfBirthValid
+    )
   }
 
   render() {
@@ -117,6 +123,17 @@ class PassengerForm extends Component {
     return (
       <KeyboardAwareScrollView contentContainerStyle={styles.container}>
         <StatusBar translucent={false} barStyle="light-content" />
+        <FriendsCarousel
+          title="Choose from friend, or add new traveller"
+          backgroundColor="rgb(255, 72, 73)"
+          friends={friends}
+          onFriendPress={friend =>
+            this.setState(prevState => ({
+              ...prevState,
+              ...friend,
+            }))
+          }
+        />
         <Text style={styles.titleText}>Add New Traveller</Text>
         <TouchableWithoutFeedback
           onPress={() => this.setState({ showTitlePicker: true })}
@@ -129,12 +146,20 @@ class PassengerForm extends Component {
             )}
           </View>
         </TouchableWithoutFeedback>
-        {titleError && <FormValidationMessage>{titleError}</FormValidationMessage>}
+        {titleError && (
+          <FormValidationMessage>{titleError}</FormValidationMessage>
+        )}
         {showTitlePicker && (
           <Picker
             selectedValue={title}
             style={styles.picker}
-            onValueChange={value => this.setState({ title: value, showTitlePicker: false })}
+            onValueChange={value =>
+              this.setState({
+                title: value,
+                showTitlePicker: false,
+                titleError: '',
+              })
+            }
           >
             <Picker.Item label="Select title" />
             <Picker.Item label="Mr" value="Mr" />
@@ -144,21 +169,29 @@ class PassengerForm extends Component {
         <FormInput
           placeholder="First name"
           value={firstName}
-          onChangeText={value => this.setState({ firstName: value })}
+          onChangeText={value =>
+            this.setState({ firstName: value, firstNameError: '' })
+          }
           containerStyle={styles.inputContainer}
           placeholderTextColor="rgb(120, 120, 120)"
           inputStyle={styles.inputText}
         />
-        {firstNameError && <FormValidationMessage>{firstNameError}</FormValidationMessage>}
+        {firstNameError && (
+          <FormValidationMessage>{firstNameError}</FormValidationMessage>
+        )}
         <FormInput
           placeholder="Last name"
           value={lastName}
-          onChangeText={value => this.setState({ lastName: value })}
+          onChangeText={value =>
+            this.setState({ lastName: value, lastNameError: '' })
+          }
           containerStyle={styles.inputContainer}
           placeholderTextColor="rgb(120, 120, 120)"
           inputStyle={styles.inputText}
         />
-        {lastNameError && <FormValidationMessage>{lastNameError}</FormValidationMessage>}
+        {lastNameError && (
+          <FormValidationMessage>{lastNameError}</FormValidationMessage>
+        )}
         <FormInput
           placeholder="Date of birth"
           value={dateOfBirth}
@@ -167,18 +200,26 @@ class PassengerForm extends Component {
           placeholderTextColor="rgb(120, 120, 120)"
           inputStyle={styles.inputText}
         />
-        {dateOfBirthError && <FormValidationMessage>{dateOfBirthError}</FormValidationMessage>}
+        {dateOfBirthError && (
+          <FormValidationMessage>{dateOfBirthError}</FormValidationMessage>
+        )}
       </KeyboardAwareScrollView>
     )
   }
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  passenger: state[passengersState.STORE_NAME][ownProps.navigation.getParam('passengerId')],
+  passenger:
+    state[passengersState.STORE_NAME][
+      ownProps.navigation.getParam('passengerId')
+    ],
 })
 
 const mapDispatchToProps = {
   onEditPassenger: passengersState.actions.editPassenger,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PassengerForm)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PassengerForm)
