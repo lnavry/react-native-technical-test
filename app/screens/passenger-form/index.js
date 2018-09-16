@@ -1,24 +1,15 @@
 import React, { Component } from 'react'
-import {
-  View,
-  TouchableOpacity,
-  StatusBar,
-  Text,
-  TouchableWithoutFeedback,
-  DatePickerIOS,
-} from 'react-native'
+import { View, TouchableOpacity, StatusBar, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { FormInput, FormValidationMessage } from 'react-native-elements'
 import PropTypes from 'prop-types'
-import moment from 'moment'
 import FriendsCarousel from './components/friends-carousel'
 import TitlePicker from './components/title-picker'
+import DatePicker from './components/date-picker'
 import passengersState from '../../state/passengers'
 import friends from './friends.mock'
 import styles from './styles'
-
-const DATE_FORMAT = 'YYYY-MM-DD'
 
 const TITLE_ERROR_MESSAGE = 'Title is required'
 const FIRST_NAME_ERROR_MESSAGE =
@@ -69,7 +60,6 @@ class PassengerForm extends Component {
   })
 
   state = {
-    showDatePicker: false,
     title: this.props.passenger.title || '',
     titleError: '',
     firstName: this.props.passenger.firstName || '',
@@ -114,7 +104,6 @@ class PassengerForm extends Component {
 
   render() {
     const {
-      showDatePicker,
       title,
       titleError,
       firstName,
@@ -126,7 +115,7 @@ class PassengerForm extends Component {
     } = this.state
 
     return (
-      <KeyboardAwareScrollView contentContainerStyle={styles.container}>
+      <View style={styles.container}>
         <StatusBar translucent={false} barStyle="light-content" />
         <FriendsCarousel
           title="Choose from friend, or add new traveller"
@@ -139,68 +128,50 @@ class PassengerForm extends Component {
             }))
           }
         />
-        <Text style={styles.titleText}>Add New Traveller</Text>
-        <TitlePicker
-          title={title}
-          titleError={titleError}
-          onTitleChange={value =>
-            this.setState({ title: value, titleError: '' })
-          }
-        />
-        <FormInput
-          placeholder="First name"
-          value={firstName}
-          onChangeText={value =>
-            this.setState({ firstName: value, firstNameError: '' })
-          }
-          containerStyle={styles.inputContainer}
-          placeholderTextColor="rgb(120, 120, 120)"
-          inputStyle={styles.inputText}
-        />
-        {firstNameError && (
-          <FormValidationMessage>{firstNameError}</FormValidationMessage>
-        )}
-        <FormInput
-          placeholder="Last name"
-          value={lastName}
-          onChangeText={value =>
-            this.setState({ lastName: value, lastNameError: '' })
-          }
-          containerStyle={styles.inputContainer}
-          placeholderTextColor="rgb(120, 120, 120)"
-          inputStyle={styles.inputText}
-        />
-        {lastNameError && (
-          <FormValidationMessage>{lastNameError}</FormValidationMessage>
-        )}
-        <TouchableWithoutFeedback
-          onPress={() => this.setState({ showDatePicker: true })}
-        >
-          <View style={styles.inputContainer}>
-            {title ? (
-              <Text style={styles.inputText}>{dateOfBirth}</Text>
-            ) : (
-              <Text style={styles.placeholder}>Date of Birth</Text>
-            )}
-          </View>
-        </TouchableWithoutFeedback>
-        {showDatePicker && (
-          <DatePickerIOS
-            mode="date"
-            date={dateOfBirth ? moment(dateOfBirth).toDate() : new Date()}
-            onDateChange={date =>
-              this.setState({
-                dateOfBirth: moment(date).format(DATE_FORMAT),
-                dateOfBirthError: '',
-                showDatePicker: false,
-              })
+        <KeyboardAwareScrollView contentContainerStyle={styles.container}>
+          <Text style={styles.titleText}>Add New Traveller</Text>
+          <TitlePicker
+            title={title}
+            titleError={titleError}
+            onTitleChange={value =>
+              this.setState({ title: value, titleError: '' })
             }
           />
-        )}
-        {dateOfBirthError && (
-          <FormValidationMessage>{dateOfBirthError}</FormValidationMessage>
-        )}
-      </KeyboardAwareScrollView>
+          <FormInput
+            placeholder="First name"
+            value={firstName}
+            onChangeText={value =>
+              this.setState({ firstName: value, firstNameError: '' })
+            }
+            containerStyle={styles.inputContainer}
+            placeholderTextColor="rgb(120, 120, 120)"
+            inputStyle={styles.inputText}
+          />
+          {firstNameError && (
+            <FormValidationMessage>{firstNameError}</FormValidationMessage>
+          )}
+          <FormInput
+            placeholder="Last name"
+            value={lastName}
+            onChangeText={value =>
+              this.setState({ lastName: value, lastNameError: '' })
+            }
+            containerStyle={styles.inputContainer}
+            placeholderTextColor="rgb(120, 120, 120)"
+            inputStyle={styles.inputText}
+          />
+          {lastNameError && (
+            <FormValidationMessage>{lastNameError}</FormValidationMessage>
+          )}
+          <DatePicker
+            dateOfBirth={dateOfBirth}
+            dateOfBirthError={dateOfBirthError}
+            onDateChange={date =>
+              this.setState({ dateOfBirth: date, dateOfBirthError: '' })
+            }
+          />
+        </KeyboardAwareScrollView>
+      </View>
     )
   }
 }

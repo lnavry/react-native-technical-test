@@ -41,4 +41,10 @@ export default StyleSheet.create({
     width: '100%',
     height: 184,
   },
+  dateModal: {
+    height: 200,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 })
